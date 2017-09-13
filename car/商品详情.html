@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>商品详情页</title>
+	<script src="jquery-3.2.1.js"></script>
+	<style>
+	    *{
+	    	margin: 0;
+	    	padding: 0;
+	    }
+        .shop_box{
+        	width: 950px;
+        	margin: 0 auto;
+        }
+        .shop_box .left img{
+        	width: 418px;
+        	height: 418px;
+        }
+        .shop_box .left{
+        	float: left;
+        	width: 418px;
+        	margin-right: 22px;
+        }
+        .shop_box .right{
+        	float: left;
+        	width: 510px;
+        }
+        .shop_box .right input{
+        	width: 42px;
+        	height: 30px;
+        	outline: none;
+        	display: inline-block;
+        	vertical-align: top;
+        }
+        .shop_box .right p button{
+        	width: 20px;
+        	height: 14px;
+        	position: absolute;
+        	font-size: 10px;
+        	background: #fff;
+        }
+        .shop_box .right .button{
+        	display: inline-block;
+        	vertical-align: top;
+        	width: 20px;
+        	height: 30px;
+        	position: relative;
+        }
+	</style>
+</head>
+<body>
+	<div class="shop_box">
+        <div class="left">
+            <div class="imgtop"><img src="images/1.jpg"></div>
+            <div class="imgbottom"></div>
+        </div>
+        <div class="right">
+             <h4>宾伦手表女石英表防水 经典时尚钨钢女表 防刮情侣对表天王星系列</h4>
+             <p>价格:<span class="price"></span></p>
+             <p>尺码:<span class="size"></span></p>
+             <p>数量:
+                 <span class="number">
+                    <input type="text" name="" value="1" id="number">
+                    <span class="button">
+                        <button onclick="pre()" style="top:0" ><</button>
+                        <button onclick="next()" style="bottom: 0">></button>
+                    </span>
+                 </span>
+             </p>
+             <button id="buy">立即购买</button>
+             <button id="btn">加入购物车</button>
+        </div>
+	</div>
+	<script>
+	    var userID=localStorage.getItem("userID");
+	    function getRequest(variable){
+	    	 var query = window.location.search.substring(1);
+	    	 console.log(window.location.search);
+	    	 console.log(query);
+             var vars = query.split("&");
+             for (var i=0;i<vars.length;i++) {
+                 var pair = vars[i].split("=");
+                 if(pair[0] == variable){return pair[1];}
+            }
+                return(false);
+	    }
+	    var goodsID=getRequest("id");
+        $.ajax({
+        	url:" http://datainfo.duapp.com/shopdata/getGoods.php",
+        	dataType:"JSONP",
+        	data:{
+               goodsID:3
+        	},
+        	success:function(data){
+        		console.log(data);
+        		var json = JSON.parse(data[0].imgsUrl);
+        		for (var i = 0; i < json.length; i++) {
+        			str='<img src="'+json[i]+'">';
+                    $("#img").append(str);
+        		}
+        	}
+        });
+        $("#btn").on("click",function(){
+        	$.ajax({
+        		url:"http://datainfo.duapp.com/shopdata/updatecar.php",
+        		data:{
+        			userID:userID,
+        			goodsID:goodsID,
+        			number:$("#number").val()
+        		},
+        		success:function(data){
+        			if(data==1){
+        				alert("加入购物车成功");
+        			}else if(data==0){
+        				alert("加入购物车失败");
+        			}
+        		}
+        	})
+        })
+	</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="jquery-3.2.1.js"></script>
+	<script src="iconfont.js"></script>
+
+	<style>
+	     *{
+	     	margin: 0;
+	     	padding: 0;
+	     }
+         .icon {
+			   width: 1em; height: 1em;
+			   vertical-align: -0.15em;
+			   fill: currentColor;
+			   overflow: hidden;
+			}
+        .goods_list{
+        	width: 200px;
+        }
+        .goods_list li{
+            height: 60px;
+            color: #fff;
+            background: rgba(0,0,0,0.5);
+            font-size: 16px;
+            text-align: center;
+            line-height:60px; 
+            border: 1px solid #fff;
+            cursor: pointer;
+        }
+        .icon{
+
+        }
+	</style>
+</head>
+<body>
+    <ul class="goods_list">
+    	<li>2134</li>
+    	<li>2134</li>
+    </ul>
+	<script>
+	    var str="";
+	    var attr=[];
+	    var id=[];
+	    var flag=false;
+        $.ajax({
+           url:"http://datainfo.duapp.com/shopdata/getclass.php",
+           success:function(data){
+           	   
+           	   var data=JSON.parse(data);
+           	   $.each(data,function(index,val){
+           	   	console.log(val);
+                str+='<li classID='+val.classID+'>'+val.className+'</li>';
+                $(".goods_list").html(str);
+                $("li").on("click",function(){
+                	var url = "列表页.html"+"?id="+$(this).attr('classID');
+                	console.log(url);
+                	window.location.href = url;
+                })
+                   // $.each(val,function(key,value){
+                   //      if(key=="className"){
+                   //      	console.log(value);
+                   //      	str+="<li>"+value+"</li>";
+                   //      	$(".goods_list").html(str);
+                   //          attr.push(value);	
+                   //      }else if(key=="classID"){
+                   //           id.push(value);
+                   //           console.log(1);
+                   //      }
+                   //      for(var i=0;i<attr.length;i++){
+                   //          clickli(attr[i]);
+                   //          console.log(flag);
+                   //          console.log(id[i]);
+                   //          if(flag==true){
+                   //              console.log(id[i]);
+                   //          }
+                   //      }  
+                   // });
+           	   });
+           }  
+        })
+
+        function clickli(value){
+        	 $("li").on("click",function(){
+        	 	//console.log($(this).html());
+        	 	//console.log(value);
+        	    if($(this).html()==value){
+        	    	flag=true;
+        	    	console.log(flag);
+        	    }	
+            });
+
+       }
+	</script>
+</body>
+</html>

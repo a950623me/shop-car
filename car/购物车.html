@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="jquery-3.2.1.js"></script>
+</head>
+<body>
+    <script>
+         $.ajax({
+                 url:"http://datainfo.duapp.com/shopdata/getGoods.php",
+                 dataType:"JSONP",
+                 success:function(data){
+                 	console.log(data);
+                 }
+         });
+    </script>
+</body>
+</html>

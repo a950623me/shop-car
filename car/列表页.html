@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="jquery-3.2.1.js"></script>
+	<script src="jquery.pagination.js"></script>
+	 <style>
+	 body,html{
+	 	user-select:none;
+	 }
+	 ul li{
+	 	list-style: none
+	 }
+	 *{
+	 	margin: 0;
+	 	padding: 0;
+	 }
+     #pagination a,span{
+     	 text-decoration: none;
+     	 padding:3px;margin: 2px;
+     	 border: 1px solid blue; 
+     }
+      #pagination span.prev{
+      	 background: #fff;
+      }
+       #pagination span.next{
+      	 background: #fff;
+      }
+      #pagination .current{
+      	 background: yellow;
+      }
+      .shop_list{
+      	width: 900px;
+      	border: 1px solid red;
+      	margin: 0 auto;
+      }
+      .shop_list li{
+      	width: 200px;
+      	height: 300px;
+      	border: 1px solid red;
+      	float: left;
+      }
+      .shop_list li img{
+      	 display: block;
+      	 width: 160px;
+      	 height: 160px;
+      	 margin: 0 auto;
+      	 padding-top:10px;
+      }
+      .shop_list li span{
+      	display: block;
+      	text-align: center;
+      }
+      .shop_list:after{
+      	content: "";
+      	display: block;
+      	clear: both;
+      }
+      #pagination{
+      	text-align: center;
+      }
+	</style>
+</head>
+<body>
+     <div class="list_box">
+      
+     </div>
+	<div id="pagination">
+         
+	</div>
+	<script>
+	    function getRequest(variable){
+	    	 var query = window.location.search.substring(1);
+	    	 console.log(window.location.search);
+	    	 console.log(query);
+             var vars = query.split("&");
+             for (var i=0;i<vars.length;i++) {
+                 var pair = vars[i].split("=");
+                 if(pair[0] == variable){return pair[1];}
+            }
+                return(false);
+	    }
+	    var classID=getRequest("id");
+	    var num;
+	    var Pagenum=8;
+	    var index=0;
+	    var j;
+	    $.ajax({
+			        url:"http://datainfo.duapp.com/shopdata/getGoods.php",
+			        dataType:"JSONP",
+			        type:"get",
+			        success:function(data){
+			        	    num=Math.ceil(data.length/Pagenum)
+							$("#pagination").pagination(num,{
+						　　　　　　　　　 
+						                prev_text: "上一页",
+						                next_text: "下一页",
+						                items_per_page:1,
+						                num_edge_entries: 2,       
+						                num_display_entries:5,    
+						                //连续分页主体部分分页条目数
+						                     //当前页索引
+						　　　　　　　　callback:function(index){
+						                     ajaxlist(index);
+						               }
+						           });
+							 }	
+			        	
+			     }); 
+	  function ajaxlist(index){
+			$.ajax({
+			        	url:"http://datainfo.duapp.com/shopdata/getGoods.php",
+			        	dataType:"JSONP",
+			        	type:"get",
+			        	data:{
+                             classID:classID
+			        	},
+			        	success:function(data){
+			        		num =Math.ceil(data.length/Pagenum);
+			        		console.log(data);
+			        		j=index*Pagenum;
+			        		for(var i=0;i<Pagenum;i++){
+			        			if(j<data.length-1){
+			        				var str="<li goodID="+data[j].goodsID+"><img src='"+data[j].goodsListImg+"'</li>";
+					        		if(i%Pagenum==0){
+					        			var oul="<ul class='shop_list'>"+"</ul>";
+					        		    $(".list_box").html(oul);
+					        			}
+					        		$(".shop_list").append(str);
+			        			}
+			        			j++;
+			        		}
+			        		hreflist(data);
+
+			        	}	
+			        		// console.log(1);
+			        		
+			        		// console.log(data);
+			        		// console.log(data[index].goodsName);
+			        		// num=data.length;
+			        		// hreflist(data);
+
+			     });
+		} 
+		function hreflist(data){
+			console.log(data);
+			$(".list_box li").on("click",function(){
+				   var url ="商品详情.html"+"?id="+$(this).attr("goodID");
+                   window.location.href=url;
+			});
+		}
+	</script>
+</body>
+</html>
